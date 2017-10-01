@@ -7,8 +7,5 @@
 <script>
 
 export default {
-  created() {
-    console.log(this.$db);
-  }
 };
 </script>

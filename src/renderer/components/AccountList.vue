@@ -15,13 +15,10 @@ export default {
   props: ['accounts'],
   methods: {
     deleteAccount(account) {
-      const accountIndex = this.accounts.indexOf(account);
-      this.accounts.splice(accountIndex, 1);
-      this.$emit('accounts-update', this.accounts);
+      this.$emit('delete-account', account);
     },
     addAccount(account) {
-      this.accounts.push(account);
-      this.$emit('accounts-update', this.accounts);
+      this.$emit('add-account', account);
     }
   },
   components: {

@@ -1,6 +1,13 @@
 'use strict';
 
 import { app, BrowserWindow } from 'electron';
+import Store from 'electron-store';
+const store = new Store({
+  name: 'user-prefs',
+  defaults: {
+    windowBounds: { width: 1200, height: 800 }
+  }
+});
 
 /**
  * Set `__static` path to static files in production
@@ -19,16 +26,28 @@ function createWindow() {
   /**
    * Initial window options
    */
+
+  const { width, height } = store.get('windowBounds');
+
   mainWindow = new BrowserWindow({
-    height: 563,
-    useContentSize: true,
-    width: 1000
+    height,
+    width,
+    minHeight: 400,
+    minWidth: 400
   });
 
   mainWindow.loadURL(winURL);
 
   mainWindow.on('closed', () => {
     mainWindow = null;
+  });
+
+  mainWindow.on('resize', () => {
+    // The event doesn't pass us the window size, so we call the `getBounds` method which returns an object with
+    // the height, width, and x and y coordinates.
+    let { width, height } = mainWindow.getBounds();
+    // Now that we have them, save them using the `set` method.
+    store.set('windowBounds', { width, height });
   });
 }
 

@@ -50,9 +50,9 @@ export default {
         const username = this.usernameText;
         this.$emit('add-account', {
           name,
-          username,
-          done: false
+          username
         });
+        this.nameText = this.usernameText = '';
       }
       this.isCreating = false;
     }
