@@ -5,9 +5,10 @@
 </template>
 
 <script>
+
 export default {
   created() {
-    console.log('Tasks created!');
-  },
-}
+    console.log(this.$db);
+  }
+};
 </script>

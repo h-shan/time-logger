@@ -1,16 +1,15 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import Vue from 'vue';
+import Router from 'vue-router';
 
-import Tasks from '@/components/Tasks'
-import Accounts from '@/components/Accounts'
-import Payable from '@/components/Payable'
-import Jira from '@/components/Jira'
+import Tasks from '@/components/Tasks';
+import Accounts from '@/components/Accounts';
+import Payable from '@/components/Payable';
+import Jira from '@/components/Jira';
 // import RegisterAccount from '@/components/RegisterAccount'
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
-  mode: 'history',
   routes: [
     { path: '/', redirect: '/tasks' },
     {
@@ -28,6 +27,10 @@ export default new Router({
       },
       children: [
         {
+          path: '',
+          redirect: 'payable'
+        },
+        {
           path: 'payable',
           name: 'Payable',
           components: {
@@ -44,4 +47,4 @@ export default new Router({
       ]
     }
   ]
-})
+});

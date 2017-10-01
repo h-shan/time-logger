@@ -33,19 +33,17 @@ export default {
   data() {
     return {
       selectedTab: 'tasks'
-    }
+    };
   },
   created() {
-    console.log(this.$route.path);
-    this.$router.push({ path: '/'});
-    console.log(this.$route.path);
+    this.$router.push({ path: '/' });
   },
   methods: {
     selectTab(tab) {
       this.selectedTab = tab;
     }
   }
-}
+};
 </script>
 
 <style lang="scss">

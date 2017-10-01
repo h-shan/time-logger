@@ -22,12 +22,12 @@ export default {
   data() {
     return {
       selectedTab: 'payable'
-    }
+    };
   },
   methods: {
     selectTab(tab) {
       this.selectedTab = tab;
     }
   }
-}
+};
 </script>
