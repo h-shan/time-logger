@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <p>Hello Tasks</p>
+  <div class="container-fluid">
+    <p>Current Tasks</p>
   </div>
 </template>
 
@@ -8,6 +8,6 @@
 export default {
   created() {
     console.log('Tasks created!');
-  }
+  },
 }
 </script>

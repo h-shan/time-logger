@@ -1,7 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Tasks from '@/components/Tasks.vue'
-import Accounts from '@/components/Accounts.vue'
+
+import Tasks from '@/components/Tasks'
+import Accounts from '@/components/Accounts'
+import Payable from '@/components/Payable'
+import Jira from '@/components/Jira'
+// import RegisterAccount from '@/components/RegisterAccount'
 
 Vue.use(Router)
 
@@ -21,7 +25,23 @@ export default new Router({
       name: 'Accounts',
       components: {
         body: Accounts
-      }
+      },
+      children: [
+        {
+          path: 'payable',
+          name: 'Payable',
+          components: {
+            body: Payable
+          }
+        },
+        {
+          path: 'jira',
+          name: 'Jira',
+          components: {
+            body: Jira
+          }
+        }
+      ]
     }
   ]
 })

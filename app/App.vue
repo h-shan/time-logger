@@ -1,24 +1,25 @@
 <template>
   <div id="app">
+
     <nav class="navbar navbar-default" style="border:none;">
       <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
           <div class="navbar-brand">Time Logger</div>
         </div>
-      </div>
-      <ul class="nav nav-tabs">
-        <li role="presentation" class="active">
-          <router-link to="/tasks">
+        <div class="ui tabular menu" style="margin-top: 0px;">
+
+          <router-link class="ui item" :class="{ active: selectedTab === 'tasks' }"
+          @click.native="selectTab('tasks')" to="/tasks">
             <span>Tasks</span>
           </router-link>
-        </li>
-        <li role="presentation">
-          <router-link to="/accounts">
+
+          <router-link class="ui item" :class="{ active: selectedTab === 'accounts' }"
+          @click.native="selectTab('accounts')" to="/accounts">
             <span>Accounts</span>
           </router-link>
-        </li>
-      </ul>
+        </div>
+      </div>
     </nav>
     <transition>
       <router-view name="body"></router-view>
@@ -27,13 +28,22 @@
 </template>
 
 <script>
-import Tasks from '@/components/Tasks.vue';
 
 export default {
+  data() {
+    return {
+      selectedTab: 'tasks'
+    }
+  },
   created() {
     console.log(this.$route.path);
     this.$router.push({ path: '/'});
     console.log(this.$route.path);
+  },
+  methods: {
+    selectTab(tab) {
+      this.selectedTab = tab;
+    }
   }
 }
 </script>

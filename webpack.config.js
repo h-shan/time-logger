@@ -3,10 +3,6 @@
 const path = require('path')
 const webpack = require('webpack')
 
-function resolve (dir) {
-  return path.join(__dirname, dir)
-}
-
 module.exports = {
   entry: './app/main.js',
   output: {
@@ -42,12 +38,19 @@ module.exports = {
   plugins: [
     new webpack.ExternalsPlugin('commonjs', [
       'electron'
-    ])
+    ]),
+    new webpack.ProvidePlugin({
+    // jquery
+      $: 'jquery',
+      semantic: 'semantic-ui-css'
+    })
   ],
   resolve: {
+    extensions: ['.js', '.vue'],
     alias: {
-      '@': resolve('app'),
-      vue$: 'vue/dist/vue.js'
+      '@': path.resolve(__dirname, 'app'),
+      vue$: 'vue/dist/vue.js',
+      semantic: path.resolve(__dirname, '../node_modules/semantic-ui-css/semantic.min.js')
     }
   }
 }
