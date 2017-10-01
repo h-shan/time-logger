@@ -31,7 +31,12 @@ module.exports = {
             plugins: [require('babel-plugin-transform-runtime')]
           }
         }
-      }
+      },
+      {
+        test: /\.scss$/,
+        loader: 'style!css!sass'
+      },
+      { test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url-loader?limit=100000' }
     ]
   },
   plugins: [
