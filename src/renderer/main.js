@@ -19,5 +19,4 @@ new Vue({
   template: '<App/>'
 }).$mount('#app');
 
-console.log(db);
 Vue.prototype.$db = db;

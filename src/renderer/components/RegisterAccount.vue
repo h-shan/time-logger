@@ -8,11 +8,15 @@
         <div class="ui form">
           <div class="field">
             <label class="left floated" style="margin-left:10px;">Name</label>
-            <input v-model="nameText" type="text" ref="title" defaultValue="">
+            <input v-model="nameText" type="text" defaultValue="">
           </div>
           <div class="field">
             <label class="left floated" style="margin-left:10px;">Username</label>
-            <input v-model="usernameText" type="text" ref="project" defaultValue="">
+            <input v-model="usernameText" type="text" defaultValue="">
+          </div>
+          <div class="field">
+            <label>Password</label>
+            <input v-model="passwordText" type="password" defaultValue="">
           </div>
           <div class="ui two button attached buttons">
             <button class="ui basic blue button" v-on:click="sendForm()">
@@ -34,6 +38,7 @@ export default {
     return {
       nameText: '',
       usernameText: '',
+      passwordText: '',
       isCreating: false
     };
   },
@@ -48,9 +53,11 @@ export default {
       if (this.nameText.length > 0 && this.usernameText.length > 0) {
         const name = this.nameText;
         const username = this.usernameText;
+        const password = this.passwordText;
         this.$emit('add-account', {
           name,
-          username
+          username,
+          password
         });
         this.nameText = this.usernameText = '';
       }

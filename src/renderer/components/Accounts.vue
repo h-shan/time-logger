@@ -1,6 +1,5 @@
 <template>
   <div class="container-fluid">
-    <p>Your Accounts</p>
     <div class="ui pointing menu">
       <router-link class="item" :class="{ active: selectedTab === 'payable' }"
       @click.native="selectTab('payable')" to="/accounts/payable">

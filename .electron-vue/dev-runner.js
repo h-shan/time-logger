@@ -91,7 +91,7 @@ function startMain () {
 
     compiler.watch({}, (err, stats) => {
       if (err) {
-        console.log(err)
+        console.error(err)
         return
       }
 

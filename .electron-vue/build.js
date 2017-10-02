@@ -100,7 +100,7 @@ function pack (config) {
 function web () {
   del.sync(['dist/web/*', '!.gitkeep'])
   webpack(webConfig, (err, stats) => {
-    if (err || stats.hasErrors()) console.log(err)
+    if (err || stats.hasErrors()) console.error(err)
 
     console.log(stats.toString({
       chunks: false,

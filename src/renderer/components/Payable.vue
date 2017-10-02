@@ -17,7 +17,7 @@ export default {
     addAccount(account) {
       this.$db.accounts.insert(Object.assign({ type: 'payable' }, account), (err, doc) => {
         if (err) {
-          console.log(err);
+          console.error(err);
         }
         console.log(doc);
         this.updateAccounts();
@@ -30,7 +30,7 @@ export default {
     updateAccounts() {
       return this.$db.accounts.find({ type: 'payable' }, (err, res) => {
         if (err) {
-          console.log(err);
+          console.error(err);
           return;
         }
         this.accounts = res;
