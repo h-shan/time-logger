@@ -3,7 +3,7 @@
     <div class="content">
       <div class="header">{{ task.name }}</div>
       <div class="meta">{{ task.project }}</div>
-      <div class="description">{{ task.description }}</div>
+      <div class="description">{{ 'Priority: ' + task.description }}</div>
     </div>
   </div>
 </template>

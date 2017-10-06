@@ -1,6 +1,5 @@
 <template>
   <div class="container-fluid">
-    <p>Current Tasks</p>
     <TaskListItem v-for="task in tasks" :task="task" v-if="tasks"></TaskListItem>
   </div>
 </template>
@@ -36,7 +35,7 @@ export default {
           if (!error && response.statusCode === 200) {
             body = JSON.parse(body);
             body.issues.forEach((issue) => {
-              const description = issue.fields.issuetype.description;
+              const description = issue.fields.priority.name;
               const name = issue.fields.summary;
               const project = issue.fields.project.name;
               this.tasks.push({ description, name, project });
