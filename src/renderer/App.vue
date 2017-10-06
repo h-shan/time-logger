@@ -23,7 +23,7 @@
       <router-view name="body" v-on:task-selected="enableTimer($event)"></router-view>
     </transition>
     <Timer :task-selected="taskSelected" v-on:submit-time="processTimeSubmission($event)"></Timer>
-    <TimeConfirmation :logged-time="loggedTime"/>
+    <TimeConfirmation :task="selectedTaskInfo" :logged-time="loggedTime"/>
   </div>
 </template>
 
@@ -36,6 +36,7 @@ export default {
     return {
       selectedTab: 'tasks',
       taskSelected: false,
+      selectedTaskInfo: {},
       loggedTime: {}
     };
   },
@@ -47,7 +48,9 @@ export default {
       this.selectedTab = tab;
     },
     enableTimer($event) {
-      this.taskSelected = $event.selected;
+      console.log($event);
+      this.taskSelected = $event !== null;
+      this.selectedTaskInfo = $event;
     },
     processTimeSubmission($event) {
       this.loggedTime = $event;

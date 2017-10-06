@@ -6,11 +6,11 @@
     </div>
     <br>
     <div class="ui two buttons">
-      <button class="large ui positive button" @click="start" :class="{ 'button-disabled': !taskSelected }" v-if="state !== 'started'">
+      <button class="large ui positive button" @click="start" :class="{ 'disabled': !taskSelected }" v-if="state !== 'started'">
         {{ state === 'stopped' ? 'Start' : 'Resume' }}
       </button>
       <button class="large ui button" @click="pause" v-else>Pause</button>
-      <button class="large ui button negative" @click="stop" :class="{ 'button-disabled': state !== 'started' }">Stop</button>
+      <button class="large ui button negative" @click="stop" :class="{ 'disabled': state !== 'started' }">Stop</button>
     </div>
   </div>
 </template>
@@ -19,7 +19,7 @@
 module.exports = {
   data() {
     return {
-      accumulatedTime: 7200000,
+      accumulatedTime: 0,
       state: 'stopped',
       beginTime: new Date(),
       startTime: Date.now(),
@@ -58,13 +58,11 @@ module.exports = {
   },
   methods: {
     start() {
-      if (this.taskSelected) {
-        if (this.state === 'stopped') {
-          this.beginTime = new Date();
-        }
-        this.state = 'started';
-        this.zeroTimer();
+      if (this.state === 'stopped') {
+        this.beginTime = new Date();
       }
+      this.state = 'started';
+      this.zeroTimer();
     },
     pause() {
       this.state = 'paused';

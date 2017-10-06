@@ -1,6 +1,6 @@
 <template>
   <div class="container-fluid">
-    <TaskListItem v-for="task in tasks" :task="task" v-on:select="select($event)" :key="task.id"></TaskListItem>
+    <TaskListItem v-for="task in tasks" :task="task" v-on:select="select(task)" :key="task.id"></TaskListItem>
   </div>
 </template>
 
@@ -21,7 +21,7 @@ export default {
   methods: {
     select(selectedTask) {
       if (!this.timerRunning) {
-        if (selectedTask.isActive) {
+        if (!selectedTask.selected) {
           this.tasks.forEach((task) => {
             if (task.id === selectedTask.id) {
               this.$set(task, 'selected', true);
@@ -29,18 +29,16 @@ export default {
               this.$set(task, 'selected', false);
             }
           });
+          this.$emit('task-selected', selectedTask);
         } else {
           this.tasks.forEach((task) => {
             if (task.id === selectedTask.id) {
               this.$set(task, 'selected', false);
             }
           });
+          this.$emit('task-selected', null);
         }
-        this.$emit('task-selected', { 'selected': selectedTask.isActive });
       }
-    },
-    deselect() {
-      this.$emit('task-selected', { 'selected': false });
     },
     queryJira(team, username, password) {
       const options = {
@@ -48,7 +46,7 @@ export default {
           protocol: 'https:',
           host: team + '.atlassian.net',
           pathname: '/rest/api/2/search',
-          search: '?jql=assignee=' + username
+          search: '?jql=assignee=' + username + '+AND+resolution=Unresolved'
         }),
         auth: {
           'user': username,

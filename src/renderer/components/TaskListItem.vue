@@ -13,10 +13,7 @@ export default {
   props: ['task'],
   methods: {
     select() {
-      this.$emit('select', {
-        'id': this.task.id,
-        'isActive': !this.task.selected
-      });
+      this.$emit('select', this.task);
     }
   }
 };

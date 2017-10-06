@@ -1,13 +1,18 @@
 <template>
-<modal name="time-confirmation" transition="pop-out" :width="modalWidth" @before-open="beforeOpen" :height="400">
-  <div class="ui centered box">
-    <div class='ui centered card'>
-      <div class='content'>
+<modal name="time-confirmation" transition="pop-out" :width="350" @before-open="beforeOpen" :height="300">
+  <div class='ui centered card' style="margin-top:20px;margin-bottom:20px;">
+    <div class='content'>
+      <div class="ui form">
+
         <div class='header'>
           Confirm Time
         </div>
         <div class='meta' style="margin-bottom: 5px;">
           Logged Time: {{ loggedTime.hours }}:{{ loggedTime.minutes }}:{{ loggedTime.seconds }}
+        </div>
+        <div class="field">
+          <label class="left floated">Notes</label>
+          <input v-model="notes" type="text" required>
         </div>
         <div class="ui compact menu" style="margin-bottom:10px;">
           <div class="ui simple dropdown item" :class="{ 'loading': !workTypesReady }">
@@ -17,13 +22,13 @@
               <div class="item" v-for="workType in workTypes" @click="select(workType)">{{ workType.name }}</div>
             </div>
           </div>
-          <div style="padding:10px;" v-if="selectedWorkType.name">{{ selectedWorkType.name }}</div>
+          <div style="padding:10px;" v-if="selectedWorkType">{{ selectedWorkType.name }}</div>
         </div>
         <br>
-        <button class="ui button" @click="cancel">
+        <button class="right floated ui button" @click="cancel">
           Cancel
         </button>
-        <button class="ui positive button" @click="submit">
+        <button class="right floated ui positive button" :class="{ 'disabled': selectedWorkType === null }" @click="submit">
           Confirm
         </button>
       </div>
@@ -35,22 +40,23 @@
 <script>
 import request from 'request';
 
-const MODAL_WIDTH = 350;
 export default {
   data() {
     return {
-      modalWidth: MODAL_WIDTH,
       workTypes: [],
       workTypesReady: false,
-      selectedWorkType: {},
+      selectedWorkType: null,
+      notes: '',
       credentials: {}
     };
   },
   props: [
-    'loggedTime'
+    'loggedTime',
+    'task'
   ],
   methods: {
     beforeOpen() {
+      this.notes = this.task.name;
       this.$db.payable.find({}, (err, res) => {
         if (err) {
           console.log(err);
@@ -104,7 +110,6 @@ export default {
           return;
         }
         const payableId = res[0].id;
-        console.log(this.selectedWorkType);
         const options = {
           method: 'POST',
           url: 'https://api.payable.com/v1/work',
@@ -116,18 +121,18 @@ export default {
             worker_id: payableId,
             work_type_id: this.selectedWorkType.id,
             quantity: this.loggedTime.totalSeconds,
-            start: this.loggedTime.beginTime
+            start: this.loggedTime.beginTime,
+            notes: this.notes
           }
         };
 
         request(options, (error, response, body) => {
-          console.log(body);
           if (!error && response.statusCode < 300) {
             alert('Successfully logged time!');
             this.hide();
           } else {
             alert('An error occurred.');
-            console.log(err);
+            console.log(error);
             console.log(response.statusCode);
             this.hide();
           }
