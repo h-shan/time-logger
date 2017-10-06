@@ -1,6 +1,6 @@
 <template>
   <div class="container-fluid">
-    <TaskListItem v-for="task in tasks" :task="task" v-if="tasks"></TaskListItem>
+    <TaskListItem v-for="task in tasks" :task="task" v-on:select="select($event)" :key="task.id"></TaskListItem>
   </div>
 </template>
 
@@ -15,7 +15,33 @@ export default {
       tasks: []
     };
   },
+  props: [
+    'timerRunning'
+  ],
   methods: {
+    select(selectedTask) {
+      if (!this.timerRunning) {
+        if (selectedTask.isActive) {
+          this.tasks.forEach((task) => {
+            if (task.id === selectedTask.id) {
+              this.$set(task, 'selected', true);
+            } else {
+              this.$set(task, 'selected', false);
+            }
+          });
+        } else {
+          this.tasks.forEach((task) => {
+            if (task.id === selectedTask.id) {
+              this.$set(task, 'selected', false);
+            }
+          });
+        }
+        this.$emit('task-selected', { 'selected': selectedTask.isActive });
+      }
+    },
+    deselect() {
+      this.$emit('task-selected', { 'selected': false });
+    },
     queryJira(team, username, password) {
       try {
         const options = {
@@ -35,10 +61,11 @@ export default {
           if (!error && response.statusCode === 200) {
             body = JSON.parse(body);
             body.issues.forEach((issue) => {
+              const id = issue.id;
               const description = issue.fields.priority.name;
               const name = issue.fields.summary;
               const project = issue.fields.project.name;
-              this.tasks.push({ description, name, project });
+              this.tasks.push({ id, description, name, project });
             });
           }
         });

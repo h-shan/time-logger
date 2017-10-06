@@ -20,9 +20,9 @@
       </div>
     </nav>
     <transition>
-      <router-view name="body"></router-view>
+      <router-view name="body" v-on:task-selected="enableTimer($event)"></router-view>
     </transition>
-    <Timer></Timer>
+    <Timer :task-selected="taskSelected"></Timer>
   </div>
 </template>
 
@@ -32,7 +32,8 @@ import Timer from '@/components/Timer';
 export default {
   data() {
     return {
-      selectedTab: 'tasks'
+      selectedTab: 'tasks',
+      taskSelected: false
     };
   },
   created() {
@@ -41,6 +42,9 @@ export default {
   methods: {
     selectTab(tab) {
       this.selectedTab = tab;
+    },
+    enableTimer($event) {
+      this.taskSelected = $event.selected;
     }
   },
   components: {

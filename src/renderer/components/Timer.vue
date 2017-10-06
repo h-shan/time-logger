@@ -6,7 +6,7 @@
     </div>
     <br>
     <div class="ui two buttons">
-      <button class="large ui positive button" @click="start" v-if="state !== 'started'">
+      <button class="large ui positive button" @click="start" :class="{ 'button-disabled': !taskSelected }" v-if="state !== 'started'">
         {{ state === 'stopped' ? 'Start' : 'Resume' }}
       </button>
       <button class="large ui button" @click="pause" v-else>Pause</button>
@@ -26,6 +26,9 @@ module.exports = {
       interval: null
     };
   },
+  props: [
+    'task-selected'
+  ],
   mounted() {
     this.interval = setInterval(this.updateCurrentTime, 1000);
   },
@@ -54,8 +57,10 @@ module.exports = {
   },
   methods: {
     start() {
-      this.state = 'started';
-      this.zeroTimer();
+      if (this.taskSelected) {
+        this.state = 'started';
+        this.zeroTimer();
+      }
     },
     pause() {
       this.state = 'paused';
