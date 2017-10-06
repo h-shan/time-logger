@@ -3,13 +3,13 @@
     <JiraAccount v-for="account in accounts" :account="account"
     v-on:delete-account="deleteAccount($event)" v-on:update-account="updateAccount($event)"
     style="margin-bottom:0px;"></JiraAccount>
-    <JiraRegister v-on:add-account="addAccount($event)" style="margin-top:0px;"/>
+    <JiraRegistration v-on:add-account="addAccount($event)" style="margin-top:0px;"/>
   </div>
 </template>
 
 <script>
 import JiraAccount from './JiraAccount';
-import JiraRegister from './JiraRegister';
+import JiraRegistration from './JiraRegistration';
 
 export default {
   data() {
@@ -20,7 +20,7 @@ export default {
   methods: {
     addAccount(account) {
       console.log(account);
-      this.$db.accounts.insert(Object.assign({ type: 'jira' }, account), (err, doc) => {
+      this.$db.jira.insert(Object.assign({ type: 'jira' }, account), (err, doc) => {
         if (err) {
           console.error(err);
         }
@@ -29,7 +29,7 @@ export default {
       });
     },
     deleteAccount(account) {
-      this.$db.accounts.remove(account, {}, (err) => {
+      this.$db.jira.remove(account, {}, (err) => {
         if (err) {
           console.error(err);
         }
@@ -37,7 +37,7 @@ export default {
       });
     },
     updateAccount(account) {
-      this.$db.accounts.update({ _id: account._id }, account, {}, (err) => {
+      this.$db.jira.update({ _id: account._id }, account, {}, (err) => {
         if (err) {
           console.error(err);
         }
@@ -45,7 +45,7 @@ export default {
       });
     },
     updateAccounts() {
-      return this.$db.accounts.find({ type: 'jira' }, (err, res) => {
+      return this.$db.jira.find({}, (err, res) => {
         if (err) {
           console.error(err);
           return;
@@ -59,7 +59,7 @@ export default {
   },
   components: {
     JiraAccount,
-    JiraRegister
+    JiraRegistration
   }
 };
 </script>

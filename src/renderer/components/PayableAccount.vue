@@ -3,10 +3,13 @@
     <div class='ui card left floated' style="min-width:300px;">
       <div class='content'>
         <div class='header'>
-            {{ account.name }}
+            {{ account.email }}
         </div>
         <div class='meta'>
-            {{ account.username }}
+            {{ account.companyId }}
+        </div>
+        <div class='description'>
+            {{ account.apiKey }}
         </div>
         <div class='extra content'>
             <span class='right floated edit icon' @click="showForm">
@@ -19,16 +22,23 @@
         <div class="content" v-show="isEditing">
           <div class='ui form'>
             <div class='field'>
-              <label>Name</label>
-              <input type='text' v-model="account.name" >
+              <label>Email</label>
+              <input type='text' v-model="account.email" >
             </div>
             <div class='field'>
-              <label>Username</label>
-              <input type='text' v-model="account.username" >
+              <label>Company Id</label>
+              <input type='text' v-model="account.companyId" >
+            </div>
+            <div class='field'>
+              <label>API Key</label>
+              <input type='text' v-model="account.apiKey">
             </div>
             <div class='ui two button attached buttons'>
-              <button class='ui basic blue button' @click="hideForm">
-                Close X
+              <button class='ui basic green button' @click="updateForm">
+                Save
+              </button>
+              <button class='ui basic black button' @click="hideForm">
+                Cancel
               </button>
             </div>
           </div>
@@ -55,6 +65,10 @@
       },
       deleteAccount(account) {
         this.$emit('delete-account', account);
+      },
+      updateForm() {
+        this.$emit('update-account', this.account);
+        this.hideForm();
       }
     }
   };
