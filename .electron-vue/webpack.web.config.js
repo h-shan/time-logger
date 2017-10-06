@@ -96,7 +96,14 @@ let webConfig = {
       'process.env.IS_WEB': 'true'
     }),
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoEmitOnErrorsPlugin()
+    new webpack.NoEmitOnErrorsPlugin(),
+    new webpack.ProvidePlugin({
+        // jquery
+        $: 'jquery',
+        jQuery: 'jquery',
+        'window.jQuery': 'jquery',
+        semantic: 'semantic-ui-css',
+    })
   ],
   output: {
     filename: '[name].js',
@@ -105,7 +112,8 @@ let webConfig = {
   resolve: {
     alias: {
       '@': path.join(__dirname, '../src/renderer'),
-      'vue$': 'vue/dist/vue.esm.js'
+      'vue$': 'vue/dist/vue.esm.js',
+      'semantic': path.resolve(__dirname, '../node_modules/semantic-ui-css/semantic.min.js')
     },
     extensions: ['.js', '.vue', '.json', '.css']
   },

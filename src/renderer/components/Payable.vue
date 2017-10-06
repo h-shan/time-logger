@@ -8,6 +8,8 @@
 </template>
 
 <script>
+import request from 'request';
+
 import PayableAccount from './PayableAccount';
 import PayableRegistration from './PayableRegistration';
 
@@ -18,14 +20,6 @@ export default {
     };
   },
   methods: {
-    addAccount(account) {
-      this.$db.payable.insert(account, (err, doc) => {
-        if (err) {
-          console.error(err);
-        }
-        this.updateAccounts();
-      });
-    },
     deleteAccount(account) {
       this.$db.payable.remove(account, {}, (err) => {
         if (err) {
@@ -35,12 +29,7 @@ export default {
       });
     },
     updateAccount(account) {
-      this.$db.payable.update({ _id: account._id }, account, {}, (err) => {
-        if (err) {
-          console.error(err);
-        }
-        this.updateAccounts();
-      });
+      this.queryPayable(account, this.updateAcc);
     },
     updateAccounts() {
       return this.$db.payable.find({}, (err, res) => {
@@ -49,6 +38,49 @@ export default {
           return;
         }
         this.accounts = res;
+      });
+    },
+    addAccount(account) {
+      this.queryPayable(account, this.insertAcc);
+    },
+    queryPayable(account, callback) {
+      const options = {
+        url: 'https://api.payable.com/v1/workers',
+        auth: {
+          'user': account.companyId,
+          'pass': account.apiKey
+        }
+      };
+
+      request(options, (error, response, body) => {
+        if (!error && response.statusCode === 200) {
+          const workers = JSON.parse(body).workers;
+          workers.forEach((worker) => {
+            if (worker.email === account.email) {
+              account = Object.assign(account, worker);
+              callback(account);
+            }
+          });
+        } else {
+          alert('There was an error in registering your account.');
+        }
+      });
+    },
+    insertAcc(account) {
+      this.$db.payable.insert(account, (err, doc) => {
+        if (err) {
+          alert('There was an error in registering your account.');
+          console.error(err);
+        }
+        this.updateAccounts();
+      });
+    },
+    updateAcc(account) {
+      this.$db.payable.update({ _id: account._id }, account, {}, (err) => {
+        if (err) {
+          console.error(err);
+        }
+        this.updateAccounts();
       });
     }
   },

@@ -19,12 +19,10 @@ export default {
   },
   methods: {
     addAccount(account) {
-      console.log(account);
       this.$db.jira.insert(Object.assign({ type: 'jira' }, account), (err, doc) => {
         if (err) {
           console.error(err);
         }
-        console.log(doc);
         this.updateAccounts();
       });
     },

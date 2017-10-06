@@ -22,18 +22,21 @@
     <transition>
       <router-view name="body" v-on:task-selected="enableTimer($event)"></router-view>
     </transition>
-    <Timer :task-selected="taskSelected"></Timer>
+    <Timer :task-selected="taskSelected" v-on:submit-time="processTimeSubmission($event)"></Timer>
+    <TimeConfirmation :logged-time="loggedTime"/>
   </div>
 </template>
 
 <script>
 import Timer from '@/components/Timer';
+import TimeConfirmation from '@/components/TimeConfirmation';
 
 export default {
   data() {
     return {
       selectedTab: 'tasks',
-      taskSelected: false
+      taskSelected: false,
+      loggedTime: {}
     };
   },
   created() {
@@ -45,10 +48,15 @@ export default {
     },
     enableTimer($event) {
       this.taskSelected = $event.selected;
+    },
+    processTimeSubmission($event) {
+      this.loggedTime = $event;
+      this.$modal.show('time-confirmation');
     }
   },
   components: {
-    Timer
+    Timer,
+    TimeConfirmation
   }
 };
 </script>

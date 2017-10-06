@@ -19,8 +19,9 @@
 module.exports = {
   data() {
     return {
-      accumulatedTime: 0,
+      accumulatedTime: 7200000,
       state: 'stopped',
+      beginTime: new Date(),
       startTime: Date.now(),
       currentTime: Date.now(),
       interval: null
@@ -58,6 +59,9 @@ module.exports = {
   methods: {
     start() {
       if (this.taskSelected) {
+        if (this.state === 'stopped') {
+          this.beginTime = new Date();
+        }
         this.state = 'started';
         this.zeroTimer();
       }
@@ -76,9 +80,16 @@ module.exports = {
       }
     },
     stop() {
+      this.pause();
+      this.$emit('submit-time', {
+        beginTime: this.beginTime.toISOString(),
+        hours: this.hours,
+        minutes: this.minutes,
+        seconds: this.seconds,
+        totalSeconds: Math.ceil(this.accumulatedTime / 1000)
+      });
       this.accumulatedTime = 0;
       this.state = 'stopped';
-      this.zeroTimer();
     },
     zeroTimer() {
       this.startTime = Date.now();
