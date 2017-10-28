@@ -1,46 +1,49 @@
 <template>
-<modal name="time-confirmation" transition="pop-out" :width="350" @before-open="beforeOpen" :height="300">
-  <div class='ui centered card' style="margin-top:20px;margin-bottom:20px;">
-    <div class='content'>
-      <div class="ui form">
+<!-- <modal name="time-confirmation" transition="pop-out" :width="350" @before-open="beforeOpen" :height="300"> -->
+<div class="card">
+  <div class='content' style="padding:20px;">
 
-        <div class='header'>
-          Confirm Time
-        </div>
-        <div class='meta' style="margin-bottom: 5px;">
-          Logged Time: {{ loggedTime.hours }}:{{ loggedTime.minutes }}:{{ loggedTime.seconds }}
-        </div>
-        <div class="field">
-          <label class="left floated">Notes</label>
-          <input v-model="notes" type="text" required>
-        </div>
-        <div class="inline field">
-          <div class="ui checkbox">
-            <input type="checkbox" tabindex="0" class="hidden">
-            <label>Mark Completed</label>
-          </div>
-        </div>
-        <div class="ui compact menu" style="margin-bottom:10px;">
-          <div class="ui simple dropdown item" :class="{ 'loading': !workTypesReady }">
-            Work Type
-            <i class="dropdown icon"></i>
-            <div class="menu">
-              <div class="item" v-for="workType in workTypes" @click="select(workType)">{{ workType.name }}</div>
-            </div>
-          </div>
-          <div style="padding:10px;" v-if="selectedWorkType">{{ selectedWorkType.name }}</div>
-        </div>
-        <br>
-        <button class="right floated ui button" @click="cancel">
-          Cancel
-        </button>
-        <button class="right floated ui positive button" :class="{ 'disabled': selectedWorkType === null }" @click="submit">
-          Confirm
-        </button>
+    <div class="ui form">
+      <div class='header'>
+        Confirm Time
       </div>
+      <div class='meta' style="margin-bottom: 5px;">
+        Logged Time: {{ loggedTime.hours }}:{{ loggedTime.minutes }}:{{ loggedTime.seconds }}
+      </div>
+      <div class="field">
+        <label class="left floated">Notes</label>
+        <input v-model="notes" type="text" required>
+      </div>
+      <div class="inline field">
+        <div class="ui checkbox">
+          <input type="checkbox">
+          <label>Mark Completed</label>
+        </div>
+      </div>
+      <div class="ui compact menu" style="margin-bottom:10px;">
+        <div class="ui simple dropdown item" :class="{ 'loading': !workTypesReady }">
+          Work Type
+          <i class="dropdown icon"></i>
+          <div class="menu">
+            <div class="item" v-for="workType in workTypes" @click="select(workType)">{{ workType.name }}</div>
+          </div>
+        </div>
+        <div style="padding:10px;" v-if="selectedWorkType">{{ selectedWorkType.name }}</div>
+      </div>
+      <br>
+
+    </div>
+    <div class="actions">
+      <button class="right floated deny ui button">
+        Cancel
+      </button>
+      <button class="right floated ui positive button" :class="{ 'disabled': selectedWorkType === null }" @click="submit">
+        Confirm
+      </button>
     </div>
   </div>
-</modal>
+</div>
+<!-- </modal> -->
 </template>
 
 <script>
@@ -55,7 +58,8 @@ export default {
       workTypesReady: false,
       selectedWorkType: null,
       notes: '',
-      credentials: {}
+      credentials: {},
+      taskCompleted: true
     };
   },
   props: [
@@ -104,9 +108,6 @@ export default {
         }
       });
     },
-    cancel() {
-      this.hide();
-    },
     markCompleted(team, username, password) {
       const options = {
         method: 'PUT',
@@ -143,6 +144,10 @@ export default {
           });
         }
       });
+    },
+    toggleCompletion() {
+      console.log('he');
+      this.taskCompleted = !this.taskCompleted;
     },
     submit() {
       this.$db.payable.find({}, (err, res) => {
@@ -183,9 +188,6 @@ export default {
           }
         });
       });
-    },
-    hide() {
-      this.$modal.hide('time-confirmation');
     }
   },
   mounted() {

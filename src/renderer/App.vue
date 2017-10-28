@@ -23,13 +23,16 @@
       <router-view name="body" v-on:task-selected="enableTimer($event)"></router-view>
     </transition>
     <Timer :task-selected="taskSelected" v-on:submit-time="processTimeSubmission($event)"></Timer>
-    <TimeConfirmation :task="selectedTaskInfo" :logged-time="loggedTime"/>
+    <div class="ui modal card" style="width:300px; position:fixed; margin:-125px; height: 200px;">
+      <TimeConfirmation ref="confirm" :task="selectedTaskInfo" :logged-time="loggedTime"/>
+    </div>
   </div>
 </template>
 
 <script>
 import Timer from '@/components/Timer';
 import TimeConfirmation from '@/components/TimeConfirmation';
+import $ from 'jquery';
 
 export default {
   data() {
@@ -48,13 +51,13 @@ export default {
       this.selectedTab = tab;
     },
     enableTimer($event) {
-      console.log($event);
       this.taskSelected = $event !== null;
       this.selectedTaskInfo = $event;
     },
     processTimeSubmission($event) {
       this.loggedTime = $event;
-      this.$modal.show('time-confirmation');
+      $('.ui.modal').modal('show');
+      this.$refs.confirm.beforeOpen();
     }
   },
   components: {
