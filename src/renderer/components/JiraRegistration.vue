@@ -56,7 +56,11 @@ export default {
       if (!this.accountForm.team || !this.accountForm.username || !this.accountForm.password) {
         return;
       }
-      this.$emit('add-account', this.accountForm);
+      this.$emit('add-account', {
+        team: this.accountForm.team,
+        username: this.accountForm.username,
+        password: this.accountForm.password
+      });
       this.isCreating = false;
     }
   }

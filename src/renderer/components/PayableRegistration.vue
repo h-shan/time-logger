@@ -56,7 +56,11 @@ export default {
       if (!this.accountForm.email || !this.accountForm.companyId || !this.accountForm.apiKey) {
         return;
       }
-      this.$emit('add-account', this.accountForm);
+      this.$emit('add-account', {
+        apiKey: this.accountForm.apiKey.trim(),
+        companyId: this.accountForm.companyId.trim(),
+        email: this.accountForm.email.trim()
+      });
       this.isCreating = false;
     }
   }

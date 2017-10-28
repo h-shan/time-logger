@@ -14,8 +14,9 @@
       <input v-model="notes" type="text" required>
     </div>
     <div class="inline field">
+      <!--TODO: checkbox class makes it reset, fix that and add it back-->
       <div class="ui">
-        <input type="checkbox" v-model="taskCompleted" @click="console.log('hello')">
+        <input type="checkbox" v-model="taskCompleted">
         <label>Mark Completed</label>
       </div>
     </div>
@@ -73,7 +74,7 @@ export default {
         }
         if (res.length === 0) {
           console.log('No Account!');
-          alert('No Payable Account!');
+          this.$toasted.error('No Payable Account!');
           return;
         }
         const acc = res[0];
@@ -144,7 +145,11 @@ export default {
         request(options, (error, response, body) => {
           if (error || response.statusCode >= 300) {
             console.log(error, response);
-            alert('An error occurred while marking item complete.');
+            this.$toasted.error('An error occurred while marking task "' + status + '"');
+          } else {
+            if (status === 'Done') {
+              this.$toasted.show('Task marked completed!');
+            }
           }
         });
       });
@@ -156,7 +161,7 @@ export default {
           return;
         }
         if (res.length === 0) {
-          alert('No Jira account!');
+          this.$toasted.error('No Jira account!');
           return;
         }
         const acct = res[0];
@@ -175,7 +180,7 @@ export default {
           return;
         }
         if (res.length === 0) {
-          alert('No Payable account found!');
+          this.$toasted.error('No Payable account found!');
           return;
         }
         const payableId = res[0].id;
@@ -197,9 +202,9 @@ export default {
 
         request(options, (error, response, body) => {
           if (!error && response.statusCode < 300) {
-            alert('Successfully logged time!');
+            this.$toasted.show('Successfully logged time!');
           } else {
-            alert('An error occurred.');
+            this.$toasted.error('An error occurred.');
             console.log(error);
             console.log(response.statusCode);
           }
