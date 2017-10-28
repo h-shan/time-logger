@@ -66,7 +66,9 @@ export default {
             const description = issue.fields.priority.name;
             const name = issue.fields.summary;
             const project = issue.fields.project.name;
-            this.tasks.push({ id, team, description, name, project });
+            const issueType = issue.fields.issuetype.name;
+            const timeEstimate = issue.fields.timeestimate;
+            this.tasks.push({ id, team, description, name, project, issueType, timeEstimate });
           });
         }
       });
