@@ -3,10 +3,6 @@
     <draggable v-model="tasks">
       <TaskListItem :task="task" v-on:select="select(task)" :key="task.id" v-for="task in tasks"></TaskListItem>
     </draggable>
-    <div class="ui checkbox">
-      <input type="checkbox"/>
-      <label></label>
-    </div>
   </div>
 </template>
 
@@ -15,7 +11,6 @@ import request from 'request';
 import url from 'url';
 import TaskListItem from './TaskListItem';
 import draggable from 'vuedraggable';
-import $ from 'jquery';
 
 export default {
   data() {
@@ -78,8 +73,6 @@ export default {
   },
   mounted() {
     // wait for db to load
-    $('.ui.checkbox').checkbox();
-
     setTimeout(() => {
       this.$db.jira.find({}, (err, accounts) => {
         if (err) {

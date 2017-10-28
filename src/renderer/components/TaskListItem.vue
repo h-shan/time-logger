@@ -2,7 +2,7 @@
   <div class="ui card" :class="{ 'green': task.selected, 'task-selected': task.selected }" @click="select">
     <div class="content">
       <div class="header">{{ task.name }}</div>
-      <div class="meta">{{ task.project }}</div>
+      <div class="meta">{{ task.project }}, {{ task.team }}</div>
       <div class="description">{{ 'Priority: ' + task.description }}</div>
     </div>
   </div>

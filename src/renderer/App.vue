@@ -23,7 +23,7 @@
       <router-view name="body" v-on:task-selected="enableTimer($event)"></router-view>
     </transition>
     <Timer :task-selected="taskSelected" v-on:submit-time="processTimeSubmission($event)"></Timer>
-    <div class="ui modal card" style="width:300px; position:fixed; margin:-125px; height: 200px;">
+    <div class="ui modal card" style="width:300px; height:300px; position:fixed; margin:-125px;">
       <TimeConfirmation ref="confirm" :task="selectedTaskInfo" :logged-time="loggedTime"/>
     </div>
   </div>
