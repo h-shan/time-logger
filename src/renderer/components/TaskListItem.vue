@@ -14,6 +14,10 @@ export default {
   methods: {
     select() {
       this.$emit('select', this.task);
+    },
+    onMoveCallback(evt, originalEvent) {
+      // return false; — for cancel
+      console.log(evt);
     }
   }
 };

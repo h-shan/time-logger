@@ -1,6 +1,8 @@
 <template>
   <div class="container-fluid">
-    <TaskListItem v-for="task in tasks" :task="task" v-on:select="select(task)" :key="task.id"></TaskListItem>
+    <draggable v-model="tasks">
+      <TaskListItem :task="task" v-on:select="select(task)" :key="task.id" v-for="task in tasks"></TaskListItem>
+    </draggable>
   </div>
 </template>
 
@@ -8,6 +10,7 @@
 import request from 'request';
 import url from 'url';
 import TaskListItem from './TaskListItem';
+import draggable from 'vuedraggable';
 
 export default {
   data() {
@@ -62,7 +65,7 @@ export default {
             const description = issue.fields.priority.name;
             const name = issue.fields.summary;
             const project = issue.fields.project.name;
-            this.tasks.push({ id, description, name, project });
+            this.tasks.push({ id, team, description, name, project });
           });
         }
       });
@@ -83,7 +86,8 @@ export default {
     }, 500);
   },
   components: {
-    TaskListItem
+    TaskListItem,
+    draggable
   }
 };
 </script>

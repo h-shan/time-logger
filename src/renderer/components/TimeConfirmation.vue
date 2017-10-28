@@ -14,6 +14,12 @@
           <label class="left floated">Notes</label>
           <input v-model="notes" type="text" required>
         </div>
+        <div class="inline field">
+          <div class="ui checkbox">
+            <input type="checkbox" tabindex="0" class="hidden">
+            <label>Mark Completed</label>
+          </div>
+        </div>
         <div class="ui compact menu" style="margin-bottom:10px;">
           <div class="ui simple dropdown item" :class="{ 'loading': !workTypesReady }">
             Work Type
@@ -39,6 +45,8 @@
 
 <script>
 import request from 'request';
+import url from 'url';
+import $ from 'jquery';
 
 export default {
   data() {
@@ -99,6 +107,43 @@ export default {
     cancel() {
       this.hide();
     },
+    markCompleted(team, username, password) {
+      const options = {
+        method: 'PUT',
+        url: url.format({
+          protocol: 'https:',
+          host: team + '.atlassian.net',
+          pathname: '/rest/api/2/issue/' + this.task.id
+        }),
+        auth: {
+          'user': username,
+          'pass': password
+        },
+        form: {
+          fields: {
+            resolution: {
+              self: 'https://skedlife.atlassian.net/rest/api/2/resolution/10000',
+              id: '10000',
+              description: 'Work has been completed on this issue.',
+              'name': 'Done'
+            }
+          }
+        }
+      };
+
+      request(options, (error, response, body) => {
+        if (!error && response.statusCode === 200) {
+          body = JSON.parse(body);
+          body.issues.forEach((issue) => {
+            const id = issue.id;
+            const description = issue.fields.priority.name;
+            const name = issue.fields.summary;
+            const project = issue.fields.project.name;
+            this.tasks.push({ id, description, name, project });
+          });
+        }
+      });
+    },
     submit() {
       this.$db.payable.find({}, (err, res) => {
         if (err) {
@@ -142,6 +187,9 @@ export default {
     hide() {
       this.$modal.hide('time-confirmation');
     }
+  },
+  mounted() {
+    $('.ui.checkbox').checkbox();
   }
 };
 </script>
