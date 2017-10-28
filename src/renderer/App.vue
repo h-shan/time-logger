@@ -20,11 +20,11 @@
       </div>
     </nav>
     <transition>
-      <router-view name="body" v-on:task-selected="enableTimer($event)"></router-view>
+      <router-view name="body" ref="rView" v-on:task-selected="enableTimer($event)" :timer-running="timerRunning"></router-view>
     </transition>
-    <Timer :task-selected="taskSelected" v-on:submit-time="processTimeSubmission($event)"></Timer>
+    <Timer :task-selected="taskSelected" v-on:started="timerRunning = true" v-on:submit-time="processTimeSubmission($event)"></Timer>
     <div class="ui modal card" style="width:300px; height:300px; position:fixed; margin:-125px;">
-      <TimeConfirmation ref="confirm" :task="selectedTaskInfo" :logged-time="loggedTime"/>
+      <TimeConfirmation ref="confirm" :task="selectedTaskInfo" :logged-time="loggedTime" v-on:remove-task="removeTask($event)"/>
     </div>
   </div>
 </template>
@@ -40,7 +40,8 @@ export default {
       selectedTab: 'tasks',
       taskSelected: false,
       selectedTaskInfo: {},
-      loggedTime: {}
+      loggedTime: {},
+      timerRunning: false
     };
   },
   created() {
@@ -54,9 +55,15 @@ export default {
       this.taskSelected = $event !== null;
       this.selectedTaskInfo = $event;
     },
+    removeTask($event) {
+      this.$refs.rView.getTasks();
+    },
     processTimeSubmission($event) {
+      this.timerRunning = false;
       this.loggedTime = $event;
-      $('.ui.modal').modal('show');
+      $('.ui.modal').modal({
+        closable: false
+      }).modal('show');
       this.$refs.confirm.beforeOpen();
     }
   },

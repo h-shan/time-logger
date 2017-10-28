@@ -62,14 +62,14 @@ export default {
             }
           });
         } else {
-          alert('There was an error in registering your account.');
+          this.$toasted.error('There was an error in registering your account.');
         }
       });
     },
     insertAcc(account) {
       this.$db.payable.insert(account, (err, doc) => {
         if (err) {
-          alert('There was an error in registering your account.');
+          this.$toasted.error('There was an error in registering your account.');
           console.error(err);
         }
         this.updateAccounts();

@@ -73,7 +73,6 @@ export default {
           return;
         }
         if (res.length === 0) {
-          console.log('No Account!');
           this.$toasted.error('No Payable Account!');
           return;
         }
@@ -149,6 +148,7 @@ export default {
           } else {
             if (status === 'Done') {
               this.$toasted.show('Task marked completed!');
+              this.$emit('remove-task', { task: this.task });
             }
           }
         });

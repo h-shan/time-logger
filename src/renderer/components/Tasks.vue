@@ -44,6 +44,7 @@ export default {
       }
     },
     queryJira(team, username, password) {
+      this.tasks = [];
       const options = {
         url: url.format({
           protocol: 'https:',
@@ -69,11 +70,8 @@ export default {
           });
         }
       });
-    }
-  },
-  mounted() {
-    // wait for db to load
-    setTimeout(() => {
+    },
+    getTasks() {
       this.$db.jira.find({}, (err, accounts) => {
         if (err) {
           console.error(err);
@@ -83,6 +81,12 @@ export default {
           this.queryJira(account.team, account.username, account.password);
         });
       });
+    }
+  },
+  mounted() {
+    // wait for db to load
+    setTimeout(() => {
+      this.getTasks();
     }, 500);
   },
   components: {

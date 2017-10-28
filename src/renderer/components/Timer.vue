@@ -63,6 +63,7 @@ module.exports = {
       }
       this.state = 'started';
       this.zeroTimer();
+      this.$emit('started');
     },
     pause() {
       this.state = 'paused';
