@@ -2,7 +2,7 @@
   <div class="timer">
     <div class="massive ui label" style="float:right;">
       Time
-      <span class="detail">{{ hours }}:{{ minutes }}:{{ seconds }}</span>
+      <span class="detail">{{ hhmmss(lapsed) }}</span>
     </div>
     <br>
     <div class="ui two buttons">
@@ -16,7 +16,12 @@
 </template>
 
 <script>
-module.exports = {
+import TimeFormat from '@/mixins/TimeFormat';
+
+export default {
+  mixins: [
+    TimeFormat
+  ],
   data() {
     return {
       accumulatedTime: 0,
@@ -42,18 +47,6 @@ module.exports = {
     },
     lapsed() {
       return this.milliseconds + this.accumulatedTime;
-    },
-    hours() {
-      var hrs = Math.floor((this.lapsed / 1000 / 60 / 60));
-      return hrs >= 10 ? hrs : '0' + hrs;
-    },
-    minutes() {
-      var min = Math.floor((this.lapsed / 1000 / 60) % 60);
-      return min >= 10 ? min : '0' + min;
-    },
-    seconds() {
-      var sec = Math.ceil((this.lapsed / 1000) % 60);
-      return sec >= 10 ? sec : '0' + sec;
     }
   },
   methods: {

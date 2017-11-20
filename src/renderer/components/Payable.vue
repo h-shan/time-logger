@@ -1,6 +1,6 @@
 <template>
   <div>
-    <PayableAccount v-for="account in accounts" :account="account"
+    <PayableAccount v-for="account in accounts" :account="account" :key="account._id"
     v-on:delete-account="deleteAccount($event)" v-on:update-account="updateAccount($event)"
     style="margin-bottom:0px;"></PayableAccount>
     <PayableRegistration v-on:add-account="addAccount($event)" style="margin-top:0px;" v-if="accounts.length === 0"/>

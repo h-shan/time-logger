@@ -7,7 +7,7 @@
       Confirm Time
     </div>
     <div class='meta' style="margin-bottom: 5px;">
-      Logged Time: {{ loggedTime.hours }}:{{ loggedTime.minutes }}:{{ loggedTime.seconds }}
+      Logged Time: {{ hhmmss(loggedTime.totalSeconds) }}
     </div>
     <div class="field">
       <label class="left floated">Notes</label>
@@ -49,7 +49,12 @@
 import request from 'request';
 import $ from 'jquery';
 
+import TimeFormat from '@/mixins/TimeFormat';
+
 export default {
+  mixins: [
+    TimeFormat
+  ],
   data() {
     return {
       workTypes: [],
@@ -105,14 +110,14 @@ export default {
         }
       });
     },
-    markStatus(team, user, pass, status) {
-      const url = 'https://' + team + '.atlassian.net/rest/api/2/issue/' + this.task.id + '/transitions';
+    markStatus({ team, username, password }, status) {
+      const url = `https://${team}.atlassian.net/rest/api/2/issue/${this.task.id}/transitions`;
       request({
         method: 'GET',
         url,
         auth: {
-          user,
-          pass
+          username,
+          password
         }
       }, (error, response, body) => {
         if (error) {
@@ -122,7 +127,7 @@ export default {
         body = JSON.parse(body);
         let tranId = -1;
         body.transitions.forEach((tran) => {
-          if (tran.name === status) {
+          if (tran.name.toLowerCase().includes(status.toLowerCase())) {
             tranId = tran.id;
           }
         });
@@ -130,8 +135,8 @@ export default {
           method: 'POST',
           url,
           auth: {
-            user,
-            pass
+            username,
+            password
           },
           body: {
             transition: {
@@ -144,7 +149,7 @@ export default {
         request(options, (error, response, body) => {
           if (error || response.statusCode >= 300) {
             console.log(error, response);
-            this.$toasted.error('An error occurred while marking task "' + status + '"');
+            this.$toasted.error('An error occurred while marking task in "' + status + '"');
           } else {
             if (status === 'Done') {
               this.$toasted.show('Task marked completed!');
@@ -166,12 +171,39 @@ export default {
         }
         const acct = res[0];
         if (this.taskCompleted) {
-          this.markStatus(acct.team, acct.username, acct.password, 'Done');
+          this.markStatus(acct, 'done');
         } else {
-          this.markStatus(acct.team, acct.username, acct.password, 'In Progress');
+          this.markStatus(acct, 'progress');
+        }
+        if (this.loggedTime.totalSeconds >= 60) {
+          this.logJiraTime(acct);
         }
       });
       this.logPayableTime();
+    },
+    logJiraTime({ team, username, password }) {
+      const url = `https://${team}.atlassian.net/rest/api/2/issue/${this.task.id}/worklog`;
+      const options = {
+        method: 'POST',
+        url,
+        auth: {
+          username,
+          password
+        },
+        body: {
+          timeSpentSeconds: this.loggedTime.totalSeconds
+        },
+        json: true
+      };
+
+      request(options, (error, response, body) => {
+        if (error || response.statusCode >= 300) {
+          console.log(error, response);
+          this.$toasted.error('An error occurred while logging time in JIRA.');
+        } else {
+          this.$toasted.show('Logged time in JIRA!');
+        }
+      });
     },
     logPayableTime() {
       this.$db.payable.find({}, (err, res) => {

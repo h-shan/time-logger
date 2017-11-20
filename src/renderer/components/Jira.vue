@@ -1,6 +1,6 @@
 <template>
   <div>
-    <JiraAccount v-for="account in accounts" :account="account"
+    <JiraAccount v-for="account in accounts" :account="account" :key="account._id"
     v-on:delete-account="deleteAccount($event)" v-on:update-account="updateAccount($event)"
     style="margin-bottom:0px;"></JiraAccount>
     <JiraRegistration v-on:add-account="addAccount($event)" style="margin-top:0px;"/>
