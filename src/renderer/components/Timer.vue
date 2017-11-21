@@ -2,7 +2,7 @@
   <div class="timer">
     <div class="massive ui label" style="float:right;">
       Time
-      <span class="detail">{{ hhmmss(lapsed) }}</span>
+      <span class="detail">{{ hhmmss(lapsed/1000) }}</span>
     </div>
     <br>
     <div class="ui two buttons">

@@ -16,11 +16,11 @@
     <div class="inline field">
       <!--TODO: checkbox class makes it reset, fix that and add it back-->
       <div class="ui">
-        <input type="checkbox" v-model="taskCompleted">
-        <label>Mark Completed</label>
+        <input type="checkbox" v-model="usePayable">
+        <label>Use Payable</label>
       </div>
     </div>
-    <div class="ui compact menu" style="margin-bottom:10px;">
+    <div class="ui compact menu" style="margin-bottom:10px;" v-if="usePayable">
       <div class="ui simple dropdown item" :class="{ 'loading': !workTypesReady }">
         Work Type
         <i class="dropdown icon"></i>
@@ -33,11 +33,22 @@
     <br>
 
   </div>
+
+  <div class="inline field right floated">
+    <!--TODO: checkbox class makes it reset, fix that and add it back-->
+    <div class="ui">
+      <input type="checkbox" v-model="taskCompleted">
+      <label>Mark Completed</label>
+    </div>
+  </div>
+  <br/>
+  <br/>
+  <br/>
   <div class="ui actions">
     <button class="right floated deny ui button">
       Cancel
     </button>
-    <button class="right floated ui positive button" :class="{ 'disabled': selectedWorkType === null }" @click="submit">
+    <button class="right floated ui positive button" :class="{ 'disabled': confirmDisabled }" @click="submit">
       Confirm
     </button>
   </div>
@@ -62,13 +73,22 @@ export default {
       selectedWorkType: null,
       notes: '',
       credentials: {},
-      taskCompleted: false
+      taskCompleted: false,
+      usePayable: false
     };
   },
   props: [
     'loggedTime',
     'task'
   ],
+  computed: {
+    confirmDisabled() {
+      if (this.usePayable) {
+        return this.selectedWorkType === null;
+      }
+      return false;
+    }
+  },
   methods: {
     beforeOpen() {
       this.notes = this.task.name;
@@ -179,7 +199,9 @@ export default {
           this.logJiraTime(acct);
         }
       });
-      this.logPayableTime();
+      if (this.usePayable) {
+        this.logPayableTime();
+      }
     },
     logJiraTime({ team, username, password }) {
       const url = `https://${team}.atlassian.net/rest/api/2/issue/${this.task.id}/worklog`;
@@ -191,7 +213,8 @@ export default {
           password
         },
         body: {
-          timeSpentSeconds: this.loggedTime.totalSeconds
+          timeSpentSeconds: this.loggedTime.totalSeconds,
+          comment: this.notes
         },
         json: true
       };
